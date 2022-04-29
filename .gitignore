@@ -8,5 +8,5 @@ __pycache__
 test.py
 *.jpg
 
-user.json
+archive/user.json
 app-user.json
