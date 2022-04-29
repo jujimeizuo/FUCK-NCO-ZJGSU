@@ -1,0 +1,49 @@
+name: 提交代码漏洞(bug report)
+description: 提交代码问题(File a bug report)
+title: "[Bug]: "
+labels: ["bug", "triage"]
+assignees:
+  - Hukeqing
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您抽出时间填写此错误报告！(Thanks for taking the time to fill out this bug report!)
+  - type: dropdown
+    id: version
+    attributes:
+      label: 版本描述
+      description: 能否告诉我你使用了什么导致了错误，若有多个，请选择下拉框中的优先项目
+      options:
+        - 云战役——Linux 服务器版本
+        - 云战役——GitHub Action 版本
+        - 云战役——腾讯云版本
+        - 我的商大——Linux 服务器版本
+        - README 文档中的其他
+        - 自行实现的方案
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 遇到了什么问题(What happened?)
+      description: 请详细说明遇到了什么，另请告诉我们，您预计应该发生什么？(Also tell us, what did you expect to happen?)
+      placeholder: 告诉我们你遇到了什么！(Tell us what you see!)
+      value: "A bug happened!"
+      render: markdown
+    validations:
+      required: true
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: 如果我们需要更多信息，我们如何与您联系？这是一个选填项(How can we get in touch with you if we need more info? [option])
+      placeholder: ex. email@example.com
+    validations:
+      required: false
+  - type: textarea
+    id: other
+    attributes:
+      label: 补充的内容
+      description: 另外还有需要补充的内容吗？
+      render: markdown
