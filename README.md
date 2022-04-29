@@ -29,7 +29,6 @@ cd /root/
 git clone https://github.com/Hukeqing/FUCK-NCO-ZJGSU.git
 cd FUCK-NCO-ZJGSU
 pip install -r requirements.txt
-chmod +x start.sh
 chmod +x app-start.sh
 chmod +x app-yzy.sh
 ```
@@ -69,6 +68,12 @@ crontab -e
 ### 第一步
 
 请执行上方的通用第一步
+
+然后给脚本赋予权限
+
+```shell
+chmod +x start.sh
+```
 
 ### 第二步
 
