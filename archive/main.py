@@ -38,5 +38,5 @@ for user in users:
     # ---------------安全线-------------#
     res = s.post('https://nco.zjgsu.edu.cn/', data=data, headers=header)
     print(datetime.datetime.now().strftime('%Y-%m-%d'), '报送情况：', '报送成功' if
-          re.search('报送成功', str(res.content, encoding='utf-8')) is not None else '报送失败！！！！！')
+    re.search('报送成功', str(res.content, encoding='utf-8')) is not None else '报送失败！！！！！')
     time.sleep(10)

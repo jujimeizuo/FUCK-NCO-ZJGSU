@@ -1,20 +1,29 @@
 # FUCK NCO ZJGSU
 
-浙江工商大学 云战疫 自动报送
+浙江工商大学 云战疫（支持新旧两个版本） & 我的商大 自动报送
 
-## 使用方法
+## 本代码使用 GPL 3.0 开源，请遵循 GPL 3.0 进行开发使用
 
-*（点击即可展开或收起）*
+## 说明
 
-<details>
-    <summary>直接拉取源码部署</summary>
-<br>
+**本项目仅供学习交流使用，请勿使用本项目代码进行自动报送，依照 GPLv3 开源协议，本项目的相关人员不承担任何责任，请自行承担责任**
 
-优点是本地部署，便于管理，理论上不会被记录，稳定。缺点是需要一台服务器（？）
+老版本云战役采用的是纯 web 的方式直接硬破解的，所以比较特殊，我的商大的报送以及新版本的云战役我都采用了 oAuth2 去获取 token，所以比较统一，于是这个项目的一些代码就变得奇怪了起来
 
-以下所有操作均在配置有git和python3的Linux系统下进行
+所有带有 app 开头的文件均为 oAuth2 模式的开发，请注意区别。老版本云战役虽然停止使用，但是为了保留历史记录，我将其保留，并将所有历史文件移动至 archive 文件夹下
 
-### 第一步
+当然因为这部分的破解 token 的获取方式，也就导致了本项目其实可以衍生出很多很多很有意思的项目，比如抢选课，但是我已经不需要选课了，所以留给后人开发吧
+
+同时不再介绍其他使用方法，仅介绍服务器使用方案。因为太乱了 如果有希望能够维护其他解决方案的，推荐 fork 本项目，然后自行开发，并可以通过 issues 的方式通知我，我将优秀的解决方案放在本 README 上来帮助其他用户跳转
+
+**但是，如果你希望使用本项目的代码继续进行开发，则请务必按照 GPLv3 开源协议进行合法使用，并请注明本项目的地址**
+
+## 其他开发版本
+
+ - [自动报送 Github/云函数版](https://github.com/yujianke100/AUTO-FUCK-NCO-ZJGSU)
+
+## 通用第一步
+
 请先在服务器上进行如下操作
 
 将代码复制至目标文件夹下
@@ -24,12 +33,57 @@ cd /root/
 git clone https://github.com/Hukeqing/FUCK-NCO-ZJGSU.git
 cd FUCK-NCO-ZJGSU
 pip install -r requirements.txt
-chmod +x start.sh
+chmod +x app-start.sh
+chmod +x app-yzy.sh
 ```
 **请注意，脚本使用的是 python3，如果下载包时使用了 python2 则会出现意料之外的情况**
-**然后修改 userExample.json 文件，并将文件重命名为 user.json**
+
+## 云战役新版本-使用方法
+
+### 第一步
+
+执行通用第一步
 
 ### 第二步
+
+**修改 app-userExample.json 文件的内容，并将文件重命名为 app-user.json**
+
+### 第三步
+然后为服务器添加定时任务
+```shell script
+crontab -e
+```
+
+添加下面的内容
+```shell script
+5 0 * * * /root/FUCK-NCO-ZJGSU/app-yzy.sh
+```
+此行代码的表示会在0点05分时自动打卡，如果你需要调整自动打卡时间，请自行修改，例如如下代码为在早上 8 点 32 分自动打卡
+```shell script
+32 8 * * * /root/FUCK-NCO-ZJGSU/app-yzy.sh
+```
+
+然后保存即可
+
+## 云战役（老版本）—使用方法
+
+请将所有 archive 内的文件复制到项目的 root 目录下
+
+### 第一步
+
+请执行上方的通用第一步
+
+然后给脚本赋予权限
+
+```shell
+chmod +x start.sh
+```
+
+### 第二步
+
+**修改 userExample.json 文件，并将文件重命名为 user.json**
+
+### 第三步
 然后为服务器添加定时任务
 ```shell script
 crontab -e
@@ -46,58 +100,30 @@ crontab -e
 
 然后保存即可
 
-***
-
-</details>
-
-<details>
-    <summary>通过腾讯云函数（SCF）部署</summary>
-<br>
-
-优点是不需要服务器，且报送时IP在境内。缺点是一定程度存在被记录的风险，以及对SCF新手不友好。
+## 我的商大-使用方法
 
 ### 第一步
 
-下载 [SCF 版本的压缩包](https://github.com/uselessbug/FUCK-NCoV-ZJGSU/releases/download/v0.01_scf/v0.01_scf.zip)
+执行通用第一步
 
 ### 第二步
 
-直接访问腾讯云函数控制台创建云函数： [https://console.cloud.tencent.com/scf/list-create](https://console.cloud.tencent.com/scf/list-create) ，按照下图所示的说明进行创建。
+**修改 app-userExample.json 文件，并将文件重命名为 app-user.json**
 
-![scf01](https://i0.hdslb.com/bfs/album/a3759fa1bf6939fd3a6c524df90a51ef651334f0.png)
-![scf02](https://i0.hdslb.com/bfs/album/2d484412bf8054a042dbd60fb4cbc1d498584ab2.png)
-![scf03](https://i0.hdslb.com/bfs/album/782946ff930e170614f5e4c285815ab849370166.png)
+### 第三步
+然后为服务器添加定时任务
+```shell script
+crontab -e
+```
 
-配置完成后，点击下方“完成”进行保存，并检查运行情况
+添加下面的内容
+```shell script
+5 20 * * * /root/FUCK-NCO-ZJGSU/app-start.sh
+```
+此行代码的表示会在20点05分时自动打卡，如果你需要调整自动打卡时间，请自行修改，例如如下代码为在早上 8 点 32 分自动打卡
+```shell script
+32 8 * * * /root/FUCK-NCO-ZJGSU/app-start.sh
+```
 
-***
+然后保存即可
 
-</details>
-
-<details>
-    <summary>使用GitHub Action进行部署</summary>
-<br>
-
-
-优点是不需要服务器，部署步骤最快。缺点是使用美国IP，较大可能存在被记录的风险。
-
-### 第一步
-Fork本仓库，而后在Settings-Secrets中添加以下secret
-|变量名|含义|
-| --- | --- |
-|NAME |用户名（学号）|
-|PASSWORD|密码|
-
-### 第二步
-到Action页面，启用workflow。然后随意修改`README.md`并提交一次commit，检查workflow运行情况
-
-此项目默认会在每天十点左右上午执行，如需变更请修改`.github/workflows/main.yml`
-
-如果一个项目超过60天不活跃，其workflow会被禁用。如需永动请参考https://github.com/zhzhzhy/Workflow-Keep-Alive
-***
-
-</details>
-
-
-# 本代码使用 GPL 3.0 开源，请遵循 GPL 3.0 进行开发使用
-# 仅供学习交流使用，如有意外，自行承担责任
