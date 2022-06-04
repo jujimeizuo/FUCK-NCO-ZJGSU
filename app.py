@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import datetime
+import hashlib
 import json
 import re
 import sys
-import hashlib
 
 import requests
+from Crypto.Cipher import AES
 from requests.structures import CaseInsensitiveDict
 
 header = {
@@ -16,9 +17,34 @@ with open('app-user.json', encoding='utf-8') as f:
     users = json.load(f)
 
 
-def time_encode(t: str):
-    a = ord('a')
-    return "".join(list([chr(int(i) + a) for i in t]))
+def cbc_encrypt(plaintext: str) -> str:
+    """
+    AES-CBC 加密
+    key 必须是 16(AES-128)、24(AES-192) 或 32(AES-256) 字节的 AES 密钥；
+    初始化向量 iv 为随机的 16 位字符串 (必须是16位)，
+    解密需要用到这个相同的 iv，因此将它包含在密文的开头。
+    """
+    key = 'ED7925CF8acd26B0'
+    block_size = len(key)
+    padding = (block_size - len(plaintext) % block_size) or block_size  # 填充字节
+
+    iv = '3670759D768a359f'
+    mode = AES.new(key.encode(), AES.MODE_CBC, iv.encode())
+    ciphertext = mode.encrypt((plaintext + padding * chr(padding)).encode())
+
+    return ciphertext.hex()
+
+
+def cbc_decrypt(ciphertext: str) -> str:
+    """
+    AES-CBC 解密
+    密文的前 16 个字节为 iv
+    """
+    key = 'ED7925CF8acd26B0'
+    iv = '3670759D768a359f'
+    mode = AES.new(key.encode(), AES.MODE_CBC, iv.encode())
+    plaintext = mode.decrypt(bytes.fromhex(ciphertext))
+    return plaintext[:-plaintext[-1]].decode()
 
 
 for user in users:
@@ -54,9 +80,10 @@ for user in users:
         elif sys.argv[1] == 'yzy':
             # 这里是新的两个参数的破解方案
             t = str(int(datetime.datetime.now().timestamp() * 1000))
-            headers["zjgsuCheck"] = time_encode(t)
-            keycode: str = user['username'] + '#' + t + '$533E8CCF0194585286CC349'
-            headers["zjgsuAuth"] = hashlib.md5(keycode.encode('utf-8')).hexdigest()
+            tp = t + '26B0'
+            headers["zjgsuAuth"] = hashlib.md5((user['username'] + '*' + tp + '^25A622DCE625882D8085CC9F00BF8C12')
+                                               .encode('utf-8')).hexdigest()
+            headers['zjgsuCheck'] = cbc_encrypt('882D' + tp)
             # 虽然你什么都不传输过去也是可以的，但是感觉还是得给学校一点面子，毕竟让辅导员看到我啥都没填写就推送的也不太好是不是啊，所以就随便写一点把
             data = """{"currentResd":":)","fromHbToZj":"C","fromWtToHz":"B","meetCase":"C","travelCase":"D",
             "medObsv":"B","belowCase":"D","hzQrCode":"A","specialDesc":"无","deviceId":"iPhone 104 pro max plus",
