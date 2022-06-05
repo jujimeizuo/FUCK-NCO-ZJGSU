@@ -85,17 +85,12 @@ for user in users:
                                                .encode('utf-8')).hexdigest()
             headers['zjgsuCheck'] = cbc_encrypt('882D' + tp)
             # 虽然你什么都不传输过去也是可以的，但是感觉还是得给学校一点面子，毕竟让辅导员看到我啥都没填写就推送的也不太好是不是啊，所以就随便写一点把
+            # 现在增加了经纬度的检查，那……我现在在 Apple Park 吧！
             data = """{"currentResd":":)","fromHbToZj":"C","fromWtToHz":"B","meetCase":"C","travelCase":"D",
             "medObsv":"B","belowCase":"D","hzQrCode":"A","specialDesc":"无","deviceId":"iPhone 104 pro max plus",
-            "fromDevice":"","isNewEpid":"否","location":"鸟白岛","coordinate":":-("}""".encode('utf-8')
+            "fromDevice":"","isNewEpid":"否","location":"鸟白岛","coordinate":"37.3346437,-122.0131992"}""".encode('utf-8')
             res = s.post('https://yzy.zjgsu.edu.cn/cloudbattleservice/service/add', headers=headers, data=data)
-            msg = ''
-            if res.json()['code'] == 20000:
-                msg = '成功打卡'
-            elif res.json()['code'] == 20001:
-                msg = '*主动打卡*'
-            else:
-                msg = '打卡失败！！！！！！'
+            msg = res.json()['message']
             print(datetime.datetime.now().strftime('%Y-%m-%d'), '报送情况:', msg)
         else:
             print(datetime.datetime.now().strftime('%Y-%m-%d'), '参数错误')
