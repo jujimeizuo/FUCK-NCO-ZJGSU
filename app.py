@@ -90,13 +90,7 @@ for user in users:
             "medObsv":"B","belowCase":"D","hzQrCode":"A","specialDesc":"无","deviceId":"iPhone 104 pro max plus",
             "fromDevice":"","isNewEpid":"否","location":"鸟白岛","coordinate":"37.3346437,-122.0131992"}""".encode('utf-8')
             res = s.post('https://yzy.zjgsu.edu.cn/cloudbattleservice/service/add', headers=headers, data=data)
-            msg = ''
-            if res.json()['code'] == 20000:
-                msg = '成功打卡'
-            elif res.json()['code'] == 20001:
-                msg = '*主动打卡*'
-            else:
-                msg = '打卡失败！！！！！！'
+            msg = res.json()['message']
             print(datetime.datetime.now().strftime('%Y-%m-%d'), '报送情况:', msg)
         else:
             print(datetime.datetime.now().strftime('%Y-%m-%d'), '参数错误')
